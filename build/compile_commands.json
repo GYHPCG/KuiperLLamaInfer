@@ -1,0 +1,147 @@
+[
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/tensor/tensor.cpp.o -c /root/KuiperLLama/kuiper/source/tensor/tensor.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/tensor/tensor.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/base/alloc_cpu.cpp.o -c /root/KuiperLLama/kuiper/source/base/alloc_cpu.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/base/alloc_cpu.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/base/base.cpp.o -c /root/KuiperLLama/kuiper/source/base/base.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/base/base.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/base/buffer.cpp.o -c /root/KuiperLLama/kuiper/source/base/buffer.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/base/buffer.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/add.cpp.o -c /root/KuiperLLama/kuiper/source/op/add.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/add.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/embedding.cpp.o -c /root/KuiperLLama/kuiper/source/op/embedding.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/embedding.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/encode.cpp.o -c /root/KuiperLLama/kuiper/source/op/encode.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/encode.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/layer.cpp.o -c /root/KuiperLLama/kuiper/source/op/layer.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/layer.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/matmul.cpp.o -c /root/KuiperLLama/kuiper/source/op/matmul.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/matmul.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/mha.cpp.o -c /root/KuiperLLama/kuiper/source/op/mha.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/mha.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/rmsnorm.cpp.o -c /root/KuiperLLama/kuiper/source/op/rmsnorm.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/rmsnorm.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/rope.cpp.o -c /root/KuiperLLama/kuiper/source/op/rope.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/rope.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/swiglu.cpp.o -c /root/KuiperLLama/kuiper/source/op/swiglu.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/swiglu.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/model/llama2.cpp.o -c /root/KuiperLLama/kuiper/source/model/llama2.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/model/llama2.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/model/model.cpp.o -c /root/KuiperLLama/kuiper/source/model/model.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/model/model.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/kernels/add_kernel.cpp.o -c /root/KuiperLLama/kuiper/source/op/kernels/add_kernel.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/kernels/add_kernel.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/kernels/emb_kernel.cpp.o -c /root/KuiperLLama/kuiper/source/op/kernels/emb_kernel.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/kernels/emb_kernel.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/kernels/matmul_kernel.cpp.o -c /root/KuiperLLama/kuiper/source/op/kernels/matmul_kernel.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/kernels/matmul_kernel.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/kernels/mha_kernel.cpp.o -c /root/KuiperLLama/kuiper/source/op/kernels/mha_kernel.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/kernels/mha_kernel.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/kernels/rmsnorm_kernel.cpp.o -c /root/KuiperLLama/kuiper/source/op/kernels/rmsnorm_kernel.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/kernels/rmsnorm_kernel.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/kernels/rope_kernel.cpp.o -c /root/KuiperLLama/kuiper/source/op/kernels/rope_kernel.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/kernels/rope_kernel.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/kernels/softmax_kernel.cpp.o -c /root/KuiperLLama/kuiper/source/op/kernels/softmax_kernel.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/kernels/softmax_kernel.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/op/kernels/swiglu_kernel.cpp.o -c /root/KuiperLLama/kuiper/source/op/kernels/swiglu_kernel.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/op/kernels/swiglu_kernel.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/sampler/argmax_sampler.cpp.o -c /root/KuiperLLama/kuiper/source/sampler/argmax_sampler.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/sampler/argmax_sampler.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -Dllama_EXPORTS -I/root/KuiperLLama/kuiper/include -g -fPIC -std=gnu++20 -o CMakeFiles/llama.dir/kuiper/source/sampler/mult_sampler.cpp.o -c /root/KuiperLLama/kuiper/source/sampler/mult_sampler.cpp",
+  "file": "/root/KuiperLLama/kuiper/source/sampler/mult_sampler.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -I/root/KuiperLLama/kuiper/include -g -std=gnu++20 -o CMakeFiles/llama_infer.dir/main.cpp.o -c /root/KuiperLLama/main.cpp",
+  "file": "/root/KuiperLLama/main.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build/test",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -I/root/KuiperLLama/test/../kuiper/include -I/root/KuiperLLama/kuiper/include -g -std=gnu++20 -o CMakeFiles/test_llm.dir/test_main.cpp.o -c /root/KuiperLLama/test/test_main.cpp",
+  "file": "/root/KuiperLLama/test/test_main.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build/test",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -I/root/KuiperLLama/test/../kuiper/include -I/root/KuiperLLama/kuiper/include -g -std=gnu++20 -o CMakeFiles/test_llm.dir/test_buffer.cpp.o -c /root/KuiperLLama/test/test_buffer.cpp",
+  "file": "/root/KuiperLLama/test/test_buffer.cpp"
+},
+{
+  "directory": "/root/KuiperLLama/build/test",
+  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -I/root/KuiperLLama/test/../kuiper/include -I/root/KuiperLLama/kuiper/include -g -std=gnu++20 -o CMakeFiles/test_llm.dir/test_math.cpp.o -c /root/KuiperLLama/test/test_math.cpp",
+  "file": "/root/KuiperLLama/test/test_math.cpp"
+}
+]

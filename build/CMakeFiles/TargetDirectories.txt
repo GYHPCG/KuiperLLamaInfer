@@ -1,0 +1,7 @@
+/root/KuiperLLama/build/CMakeFiles/llama.dir
+/root/KuiperLLama/build/CMakeFiles/llama_infer.dir
+/root/KuiperLLama/build/CMakeFiles/edit_cache.dir
+/root/KuiperLLama/build/CMakeFiles/rebuild_cache.dir
+/root/KuiperLLama/build/test/CMakeFiles/test_llm.dir
+/root/KuiperLLama/build/test/CMakeFiles/edit_cache.dir
+/root/KuiperLLama/build/test/CMakeFiles/rebuild_cache.dir
