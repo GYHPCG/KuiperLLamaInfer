@@ -19,7 +19,7 @@ class DeviceAllocator {
   virtual void memcpy(const void* src_ptr, void* dest_ptr, size_t size) const = 0;
 
  private:
-  DeviceType device_type_ = DeviceType::kDeviceUnknown;
+  DeviceType device_type_ = DeviceType::kDeviceUnknown; //判断设备类型
 };
 
 class CPUDeviceAllocator : public DeviceAllocator {
