@@ -8,6 +8,7 @@ Buffer::Buffer(size_t byte_size, std::shared_ptr<DeviceAllocator> allocator, voi
       allocator_(allocator),
       ptr_(ptr),
       use_external_(use_external) {
+        // 如果地址为空且有内存分配器，分配内存
   if (!ptr_ && allocator_) {
     device_type_ = allocator_->device_type();
     use_external_ = false;
@@ -16,6 +17,7 @@ Buffer::Buffer(size_t byte_size, std::shared_ptr<DeviceAllocator> allocator, voi
 }
 
 Buffer::~Buffer() {
+  // 如果没有所有权，则不回收内存
   if (!use_external_) {
     if (ptr_ && allocator_) {
       allocator_->release(ptr_);
