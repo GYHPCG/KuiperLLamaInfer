@@ -11,6 +11,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/root/KuiperLLama/test/test_buffer.cpp" "test/CMakeFiles/test_llm.dir/test_buffer.cpp.o" "gcc" "test/CMakeFiles/test_llm.dir/test_buffer.cpp.o.d"
   "/root/KuiperLLama/test/test_main.cpp" "test/CMakeFiles/test_llm.dir/test_main.cpp.o" "gcc" "test/CMakeFiles/test_llm.dir/test_main.cpp.o.d"
   "/root/KuiperLLama/test/test_math.cpp" "test/CMakeFiles/test_llm.dir/test_math.cpp.o" "gcc" "test/CMakeFiles/test_llm.dir/test_math.cpp.o.d"
+  "/root/KuiperLLama/test/test_op.cpp" "test/CMakeFiles/test_llm.dir/test_op.cpp.o" "gcc" "test/CMakeFiles/test_llm.dir/test_op.cpp.o.d"
   )
 
 # Targets to which this target links.
