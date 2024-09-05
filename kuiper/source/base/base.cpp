@@ -28,7 +28,17 @@ bool Status::operator!=(int code) const {
 
 Status::operator int() const { return code_; }
 
+<<<<<<< HEAD
 Status::operator bool() const { return code_ == kSuccess; }
+=======
+Status::operator bool() const {
+  return code_ == kSuccess;
+}
+
+int32_t Status::get_err_code() const {
+  return code_;
+}
+>>>>>>> upstream/course5
 
 const std::string& Status::get_err_msg() const { return message_; }
 

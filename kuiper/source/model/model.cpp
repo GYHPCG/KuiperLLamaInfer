@@ -126,7 +126,11 @@ base::Status Model::generate_model_infos(const ModelConfig& config) const {
   config_->hidden_dim_ = config.hidden_dim;
   config_->layer_num_ = config.layer_num;
   config_->head_num_ = config.head_num;
+<<<<<<< HEAD
   config_->kv_head_num_ = config.head_num;
+=======
+  config_->kv_head_num_ = config.kv_head_num;
+>>>>>>> upstream/course5
   config_->seq_len_ = config.seq_len;
 
   config_->kv_dim_ = (config.dim * config.kv_head_num) / config.head_num;
@@ -174,12 +178,20 @@ base::Status Model::gen_model_from_file() {
   config_ = std::make_unique<TransformerConfig>();
 
   // init s entence piece processor
+<<<<<<< HEAD
+=======
+  // google sentence piece
+>>>>>>> upstream/course5
   auto create_encode_status = create_encode_layer();
   if (!create_encode_status) {
     LOG(ERROR) << "Create the encode layer failed!";
     return create_encode_status;
   }
+<<<<<<< HEAD
 
+=======
+  // mmap
+>>>>>>> upstream/course5
   auto mmap_status = read_model_file();
   if (!mmap_status) {
     LOG(ERROR) << "Handle model file " << model_path_ << " failed!";

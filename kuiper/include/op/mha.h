@@ -1,5 +1,6 @@
 #ifndef KUIPER_INLCUDE_MHA_H
 #define KUIPER_INLCUDE_MHA_H
+#include <base/cuda_config.h>
 #include "layer.h"
 namespace op {
 class MultiHeadAttention : public op::Layer {
@@ -12,7 +13,7 @@ class MultiHeadAttention : public op::Layer {
 
   void set_pos(int32_t pos);
 
-  base::Status base_forward() override;
+  base::Status forward() override;
 
  private:
   int32_t layer_index_ = 0;
