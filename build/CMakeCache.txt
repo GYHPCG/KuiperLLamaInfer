@@ -73,8 +73,8 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 //Flags used by the CXX compiler during RELWITHDEBINFO builds.
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
-//No help, variable specified on the command line.
-CMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc
+//C compiler
+CMAKE_C_COMPILER:STRING=/usr/bin/gcc
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -397,26 +397,8 @@ GTest_DIR:PATH=/usr/local/lib/cmake/GTest
 //Use CPM for dependency management
 USE_CPM:BOOL=OFF
 
-//Value Computed by CMake
-_infer_BINARY_DIR:STATIC=/root/KuiperLLama/build
-
-//Value Computed by CMake
-_infer_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-_infer_SOURCE_DIR:STATIC=/root/KuiperLLama
-
 //The directory containing a CMake configuration file for glog.
 glog_DIR:PATH=/usr/local/lib/cmake/glog
-
-//Value Computed by CMake
-lla_BINARY_DIR:STATIC=/root/KuiperLLama/build
-
-//Value Computed by CMake
-lla_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-lla_SOURCE_DIR:STATIC=/root/KuiperLLama
 
 //Value Computed by CMake
 llama_infer_BINARY_DIR:STATIC=/root/KuiperLLama/build
@@ -426,24 +408,6 @@ llama_infer_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 llama_infer_SOURCE_DIR:STATIC=/root/KuiperLLama
-
-//Value Computed by CMake
-lll_BINARY_DIR:STATIC=/root/KuiperLLama/build
-
-//Value Computed by CMake
-lll_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-lll_SOURCE_DIR:STATIC=/root/KuiperLLama
-
-//Value Computed by CMake
-test_llm_BINARY_DIR:STATIC=/root/KuiperLLama/build
-
-//Value Computed by CMake
-test_llm_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-test_llm_SOURCE_DIR:STATIC=/root/KuiperLLama
 
 
 ########################

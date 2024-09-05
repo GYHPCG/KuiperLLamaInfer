@@ -8,7 +8,7 @@ class RoPELayer : public Layer {
 
   base::Status check() const override;
 
-  base::Status forward() override;
+  base::Status base_forward() override;
 
  private:
   int32_t dim_ = 0;

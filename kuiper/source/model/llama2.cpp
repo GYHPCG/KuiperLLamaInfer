@@ -1,119 +1,17 @@
 #include "model/llama2.h"
-<<<<<<< HEAD
 #include <glog/logging.h>
 #include <sentencepiece_processor.h>
 #include <array>
-=======
-#include <cuda_runtime_api.h>
-#include <glog/logging.h>
-#include <sentencepiece_processor.h>
->>>>>>> upstream/course5
 #include <utility>
 #include "base/tick.h"
 #include "sampler/mult_sampler.h"
 namespace model {
 
-<<<<<<< HEAD
 LLama2Model::LLama2Model(std::string token_path, std::string model_path)
     : Model(base::ModelType::kModelTypeLLama2, std::move(token_path),
             std::move(model_path)) {
 }
 
-=======
-void LLama2Layers::to_cuda(std::shared_ptr<kernel::CudaConfig> config) {
-  if (add_layer_) {
-    add_layer_->set_cuda_config(config);
-    add_layer_->to_cuda();
-  }
-
-  if (rope_layer_) {
-    rope_layer_->set_cuda_config(config);
-    rope_layer_->to_cuda();
-  }
-
-  if (swiglu_layer_) {
-    swiglu_layer_->set_cuda_config(config);
-    swiglu_layer_->to_cuda();
-  }
-
-  if (cls_layer_) {
-    cls_layer_->set_cuda_config(config);
-    cls_layer_->to_cuda();
-  }
-
-  if (embedding_layer_) {
-    embedding_layer_->set_cuda_config(config);
-    embedding_layer_->to_cuda();
-  }
-
-  for (auto& mha_layer : mha_layers_) {
-    if (mha_layer) {
-      mha_layer->set_cuda_config(config);
-      mha_layer->to_cuda();
-    }
-  }
-
-  for (auto& weight_layer : wq_layers_) {
-    if (weight_layer) {
-      weight_layer->set_cuda_config(config);
-      weight_layer->to_cuda();
-    }
-  }
-
-  for (auto& weight_layer : wk_layers_) {
-    if (weight_layer) {
-      weight_layer->set_cuda_config(config);
-      weight_layer->to_cuda();
-    }
-  }
-
-  for (auto& weight_layer : wv_layers_) {
-    if (weight_layer) {
-      weight_layer->set_cuda_config(config);
-      weight_layer->to_cuda();
-    }
-  }
-
-  for (auto& weight_layer : wo_layers_) {
-    if (weight_layer) {
-      weight_layer->set_cuda_config(config);
-      weight_layer->to_cuda();
-    }
-  }
-
-  for (auto& weight_layer : w1_layers_) {
-    if (weight_layer) {
-      weight_layer->set_cuda_config(config);
-      weight_layer->to_cuda();
-    }
-  }
-
-  for (auto& weight_layer : w2_layers_) {
-    if (weight_layer) {
-      weight_layer->set_cuda_config(config);
-      weight_layer->to_cuda();
-    }
-  }
-
-  for (auto& weight_layer : w3_layers_) {
-    if (weight_layer) {
-      weight_layer->set_cuda_config(config);
-      weight_layer->to_cuda();
-    }
-  }
-
-  for (auto& rms_norm_layer : rmsnorm_layers_) {
-    if (rms_norm_layer) {
-      rms_norm_layer->to_cuda();
-      rms_norm_layer->set_cuda_config(config);
-    }
-  }
-}
-
-LLama2Model::LLama2Model(std::string token_path, std::string model_path)
-    : Model(base::ModelType::kModelTypeLLama2, std::move(token_path), std::move(model_path)) {}
-
->>>>>>> upstream/course5
 base::Status LLama2Model::init(base::DeviceType device_type) {
   using namespace base;
   if (token_path_.empty()) {
@@ -121,20 +19,6 @@ base::Status LLama2Model::init(base::DeviceType device_type) {
   }
 
   device_type_ = device_type;
-<<<<<<< HEAD
-=======
-  if (device_type == DeviceType::kDeviceCUDA) {
-    cudaSetDevice(0);
-    cuda_config_ = std::make_shared<kernel::CudaConfig>();
-    cudaStreamCreate(&cuda_config_->stream);
-    cublasCreate(&cuda_config_->handle);
-    cudaError_t err = cudaGetLastError();
-    if (err != cudaSuccess) {
-      return error::InternalError("The cuda hanle create failed.");
-    }
-  }
-
->>>>>>> upstream/course5
   Status read_status = gen_model_from_file();
   if (!read_status) {
     return read_status;
@@ -144,7 +28,6 @@ base::Status LLama2Model::init(base::DeviceType device_type) {
   return error::Success();
 }
 
-<<<<<<< HEAD
 base::Status LLama2Model::forward(const std::vector<int>& tokens, int32_t total_steps) {
   if (tokens.empty()) {
     return base::error::InvalidArgument("The token array is empty.");
@@ -181,25 +64,6 @@ base::Status LLama2Model::forward(const std::vector<int>& tokens, int32_t total_
     }
     pos += 1;
   }
-=======
-base::Status LLama2Model::forward(const tensor::Tensor& input, const tensor::Tensor& pos_tensor,
-                                  bool is_prompt, int& next) {
-  if (input.is_empty()) {
-    return base::error::InvalidArgument("The input tensor is empty.");
-  }
-
-  for (int32_t layer_idx = 0; layer_idx < config_->layer_num_; ++layer_idx) {
-    attention_rms(layer_idx, input);
-    // attention (wq wk wv @ input)
-    attention_qkv(layer_idx, pos_tensor);
-    // multi-head attention
-    attention_mha(layer_idx, pos_tensor);
-    // feed forward
-    feed_forward(layer_idx, input);
-  }
-  cls_logits(input);
-  next = post_processing(pos_tensor, is_prompt);
->>>>>>> upstream/course5
   return base::error::Success();
 }
 
@@ -210,21 +74,12 @@ void LLama2Model::create_nonparam_layers() {
 
   for (int32_t i = 0; i < config_->layer_num_; ++i) {
     auto mha_layer = std::make_shared<op::MultiHeadAttention>(
-<<<<<<< HEAD
         device_type_, i, config_->kv_mul_, config_->kv_dim_, config_->seq_len_,
         config_->head_num_, config_->head_size_);
-=======
-        device_type_, i, config_->kv_mul_, config_->kv_dim_, config_->seq_len_, config_->head_num_,
-        config_->head_size_);
->>>>>>> upstream/course5
     llama_layers_->mha_layers_.push_back(mha_layer);
   }
 
   llama_layers_->add_layer_ = std::make_shared<op::VecAddLayer>(device_type_);
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/course5
   llama_layers_->swiglu_layer_ =
       std::make_shared<op::SwiGLULayer>(device_type_, config_->hidden_dim_);
 }
@@ -232,21 +87,12 @@ void LLama2Model::create_nonparam_layers() {
 void LLama2Model::create_param_layers() {
   CHECK(llama_layers_ != nullptr);
   // The embedding layer
-<<<<<<< HEAD
-=======
-  auto cpu_device_type = base::DeviceType::kDeviceCPU;
->>>>>>> upstream/course5
   llama_layers_->embedding_layer_ = std::make_shared<op::EmbeddingLayer>(
       device_type_, config_->dim_, config_->seq_len_, std::abs(config_->vocab_size_));
 
   const float* weight_embedding = raw_model_data_->weight(0);
-<<<<<<< HEAD
   llama_layers_->embedding_layer_->set_weight(
       0, {std::abs(config_->vocab_size_), config_->dim_}, weight_embedding, device_type_);
-=======
-  llama_layers_->embedding_layer_->set_weight(0, {std::abs(config_->vocab_size_), config_->dim_},
-                                              weight_embedding, cpu_device_type);
->>>>>>> upstream/course5
 
   // create all matmul layer
   int32_t dim = config_->dim_;
@@ -254,26 +100,16 @@ void LLama2Model::create_param_layers() {
   // create weight matrix for query
   for (int32_t i = 0; i < config_->layer_num_; ++i) {
     auto wq = std::make_shared<op::MatmulLayer>(device_type_, dim, dim);
-<<<<<<< HEAD
     wq->set_weight(0, {dim, dim}, this->raw_model_data_->weight(pos), device_type_);
     pos += dim * dim;
     llama_layers_->wq_layers_.push_back(wq);
-=======
-    wq->set_weight(0, {dim, dim}, this->raw_model_data_->weight(pos), cpu_device_type);
-    llama_layers_->wq_layers_.push_back(wq);
-    pos += dim * dim;
->>>>>>> upstream/course5
   }
 
   // create weight matrix for key
   for (int32_t i = 0; i < config_->layer_num_; ++i) {
     auto wk = std::make_shared<op::MatmulLayer>(device_type_, config_->kv_dim_, dim);
-<<<<<<< HEAD
     wk->set_weight(0, {config_->kv_dim_, dim}, this->raw_model_data_->weight(pos),
                    device_type_);
-=======
-    wk->set_weight(0, {config_->kv_dim_, dim}, this->raw_model_data_->weight(pos), cpu_device_type);
->>>>>>> upstream/course5
     llama_layers_->wk_layers_.push_back(wk);
     pos += config_->kv_dim_ * dim;
   }
@@ -281,12 +117,8 @@ void LLama2Model::create_param_layers() {
   // create weight matrix for value
   for (int32_t i = 0; i < config_->layer_num_; ++i) {
     auto wv = std::make_shared<op::MatmulLayer>(device_type_, config_->kv_dim_, dim);
-<<<<<<< HEAD
     wv->set_weight(0, {config_->kv_dim_, dim}, this->raw_model_data_->weight(pos),
                    device_type_);
-=======
-    wv->set_weight(0, {config_->kv_dim_, dim}, this->raw_model_data_->weight(pos), cpu_device_type);
->>>>>>> upstream/course5
     llama_layers_->wv_layers_.push_back(wv);
     pos += config_->kv_dim_ * dim;
   }
@@ -294,11 +126,7 @@ void LLama2Model::create_param_layers() {
   // create weight matrix for output
   for (int32_t i = 0; i < config_->layer_num_; ++i) {
     auto wo = std::make_shared<op::MatmulLayer>(device_type_, dim, dim);
-<<<<<<< HEAD
     wo->set_weight(0, {dim, dim}, this->raw_model_data_->weight(pos), device_type_);
-=======
-    wo->set_weight(0, {dim, dim}, this->raw_model_data_->weight(pos), cpu_device_type);
->>>>>>> upstream/course5
     llama_layers_->wo_layers_.push_back(wo);
     pos += dim * dim;
   }
@@ -310,12 +138,8 @@ void LLama2Model::create_param_layers() {
   int32_t hidden_dim = config_->hidden_dim_;
   for (int32_t i = 0; i < config_->layer_num_; ++i) {
     auto w1 = std::make_shared<op::MatmulLayer>(device_type_, hidden_dim, dim);
-<<<<<<< HEAD
     w1->set_weight(0, {hidden_dim, dim}, this->raw_model_data_->weight(pos),
                    device_type_);
-=======
-    w1->set_weight(0, {hidden_dim, dim}, this->raw_model_data_->weight(pos), cpu_device_type);
->>>>>>> upstream/course5
     llama_layers_->w1_layers_.push_back(w1);
     pos += dim * hidden_dim;
   }
@@ -323,12 +147,8 @@ void LLama2Model::create_param_layers() {
   // w2 layers
   for (int32_t i = 0; i < config_->layer_num_; ++i) {
     auto w2 = std::make_shared<op::MatmulLayer>(device_type_, dim, hidden_dim);
-<<<<<<< HEAD
     w2->set_weight(0, {dim, hidden_dim}, this->raw_model_data_->weight(pos),
                    device_type_);
-=======
-    w2->set_weight(0, {dim, hidden_dim}, this->raw_model_data_->weight(pos), cpu_device_type);
->>>>>>> upstream/course5
     llama_layers_->w2_layers_.push_back(w2);
     pos += dim * hidden_dim;
   }
@@ -336,12 +156,8 @@ void LLama2Model::create_param_layers() {
   // w3 layers
   for (int32_t i = 0; i < config_->layer_num_; ++i) {
     auto w3 = std::make_shared<op::MatmulLayer>(device_type_, hidden_dim, dim);
-<<<<<<< HEAD
     w3->set_weight(0, {hidden_dim, dim}, this->raw_model_data_->weight(pos),
                    device_type_);
-=======
-    w3->set_weight(0, {hidden_dim, dim}, this->raw_model_data_->weight(pos), cpu_device_type);
->>>>>>> upstream/course5
     llama_layers_->w3_layers_.push_back(w3);
     pos += dim * hidden_dim;
   }
@@ -355,17 +171,10 @@ void LLama2Model::create_param_layers() {
   if (config_->is_shared_weight_) {
     // using token embedding weight
     llama_layers_->cls_layer_->set_weight(0, {config_->vocab_size_, dim},
-<<<<<<< HEAD
                                           this->raw_model_data_->weight(0), device_type_);
   } else {
     llama_layers_->cls_layer_->set_weight(
         0, {config_->vocab_size_, dim}, this->raw_model_data_->weight(pos), device_type_);
-=======
-                                          this->raw_model_data_->weight(0), cpu_device_type);
-  } else {
-    llama_layers_->cls_layer_->set_weight(0, {config_->vocab_size_, dim},
-                                          this->raw_model_data_->weight(pos), cpu_device_type);
->>>>>>> upstream/course5
   }
 
   // create rmsnorm layer
@@ -376,11 +185,7 @@ void LLama2Model::create_param_layers() {
         std::make_shared<op::RmsNormLayer>(device_type_, config_->dim_);
 
     const float* weight_rmsnorm = raw_model_data_->weight(rmsnorm_pos);
-<<<<<<< HEAD
     rms_norm_layer->set_weight(0, {config_->dim_}, weight_rmsnorm, device_type_);
-=======
-    rms_norm_layer->set_weight(0, {config_->dim_}, weight_rmsnorm, cpu_device_type);
->>>>>>> upstream/course5
     llama_layers_->rmsnorm_layers_.push_back(rms_norm_layer);
 
     rmsnorm_pos += config_->dim_;
@@ -397,11 +202,7 @@ void LLama2Model::create_param_layers() {
     std::shared_ptr<op::RmsNormLayer> rms_norm_layer =
         std::make_shared<op::RmsNormLayer>(device_type_, config_->dim_);
     const float* weight_rmsnorm = raw_model_data_->weight(rmsnorm_pos);
-<<<<<<< HEAD
     rms_norm_layer->set_weight(0, {config_->dim_}, weight_rmsnorm, device_type_);
-=======
-    rms_norm_layer->set_weight(0, {config_->dim_}, weight_rmsnorm, cpu_device_type);
->>>>>>> upstream/course5
     llama_layers_->rmsnorm_layers_.push_back(rms_norm_layer);
 
     rmsnorm_pos += config_->dim_;
@@ -415,11 +216,7 @@ void LLama2Model::create_param_layers() {
       std::make_shared<op::RmsNormLayer>(device_type_, config_->dim_);
 
   const float* weight_rmsnorm_final = raw_model_data_->weight(rmsnorm_pos);
-<<<<<<< HEAD
   rms_final_layer->set_weight(0, {config_->dim_}, weight_rmsnorm_final, device_type_);
-=======
-  rms_final_layer->set_weight(0, {config_->dim_}, weight_rmsnorm_final, cpu_device_type);
->>>>>>> upstream/course5
   llama_layers_->rmsnorm_layers_.push_back(rms_final_layer);
 }
 
@@ -428,7 +225,6 @@ std::vector<int32_t> LLama2Model::encode(const std::string& sentence) const {
   return encode_layer_->encode(sentence);
 }
 
-<<<<<<< HEAD
 void LLama2Model::init_mem() {
   auto alloc = base::CPUDeviceAllocatorFactory::get_instance();
   int32_t max_seq_len = config_->seq_len_;
@@ -436,40 +232,6 @@ void LLama2Model::init_mem() {
                               static_cast<int32_t>(max_seq_len), true, alloc);
   tensor::Tensor input_embeddings(base::DataType::kDataTypeFp32, max_seq_len,
                                   config_->dim_, true, alloc);
-=======
-int32_t LLama2Model::get_eos() {
-  CHECK(this->encode_layer_ != nullptr);
-  return this->encode_layer_->eos();
-}
-
-std::string LLama2Model::decode(int32_t token_idx) const {
-  CHECK(this->encode_layer_ != nullptr);
-  return this->encode_layer_->decode(token_idx);
-}
-
-void LLama2Model::init_mem() {
-  std::shared_ptr<base::DeviceAllocator> alloc;
-  if (device_type_ == base::DeviceType::kDeviceCPU) {
-    alloc = base::CPUDeviceAllocatorFactory::get_instance();
-  } else {
-    alloc = base::CUDADeviceAllocatorFactory::get_instance();
-  }
-
-  if (device_type_ == base::DeviceType::kDeviceCUDA) {
-    CHECK_NE(cuda_config_, nullptr);
-    llama_layers_->to_cuda(cuda_config_);
-  }
-
-  std::shared_ptr<base::DeviceAllocator> alloc_cpu =
-      base::CPUDeviceAllocatorFactory::get_instance();
-  std::shared_ptr<base::DeviceAllocator> alloc_cu =
-      base::CUDADeviceAllocatorFactory::get_instance();
-  int32_t max_seq_len = config_->seq_len_;
-  tensor::Tensor input_tokens(base::DataType::kDataTypeInt32, static_cast<int32_t>(max_seq_len),
-                              true, alloc_cpu);
-  tensor::Tensor input_embeddings(base::DataType::kDataTypeFp32, max_seq_len, config_->dim_, true,
-                                  alloc);
->>>>>>> upstream/course5
 
   CHECK(insert_buffer(ModelBufferType::kInputTokens, input_tokens));
   CHECK(insert_buffer(ModelBufferType::kInputEmbeddings, input_embeddings));
@@ -480,7 +242,6 @@ void LLama2Model::init_mem() {
   CHECK(insert_buffer(ModelBufferType::kW2Output, rms_output));
   CHECK(insert_buffer(ModelBufferType::kFFNRMSNorm, rms_output));
 
-<<<<<<< HEAD
   tensor::Tensor score_storage(base::DataType::kDataTypeFp32, config_->head_size_,
                                config_->seq_len_, true, alloc);
   CHECK(insert_buffer(ModelBufferType::kKeyStorage, score_storage));
@@ -489,26 +250,15 @@ void LLama2Model::init_mem() {
                            alloc);
   tensor::Tensor w3_output(base::DataType::kDataTypeFp32, config_->hidden_dim_, true,
                            alloc);
-=======
-  tensor::Tensor w1_output(base::DataType::kDataTypeFp32, config_->hidden_dim_, true, alloc);
-  tensor::Tensor w3_output(base::DataType::kDataTypeFp32, config_->hidden_dim_, true, alloc);
->>>>>>> upstream/course5
 
   CHECK(insert_buffer(ModelBufferType::kW1Output, w1_output));
   CHECK(insert_buffer(ModelBufferType::kW3Output, w3_output));
 
   // kv cache
-<<<<<<< HEAD
   tensor::Tensor key_cache(base::DataType::kDataTypeFp32, config_->layer_num_,
                            config_->seq_len_, config_->kv_dim_, true, alloc);
   tensor::Tensor value_cache(base::DataType::kDataTypeFp32, config_->layer_num_,
                              config_->seq_len_, config_->kv_dim_, true, alloc);
-=======
-  tensor::Tensor key_cache(base::DataType::kDataTypeFp32, config_->layer_num_, config_->seq_len_,
-                           config_->kv_dim_, true, alloc);
-  tensor::Tensor value_cache(base::DataType::kDataTypeFp32, config_->layer_num_, config_->seq_len_,
-                             config_->kv_dim_, true, alloc);
->>>>>>> upstream/course5
 
   CHECK(insert_buffer(ModelBufferType::kKeyCache, key_cache));
   CHECK(insert_buffer(ModelBufferType::kValueCache, value_cache));
@@ -518,26 +268,16 @@ void LLama2Model::init_mem() {
   CHECK(insert_buffer(ModelBufferType::kQuery, query));
 
   // Pos tensor
-<<<<<<< HEAD
   tensor::Tensor pos_tensor(base::DataType::kDataTypeInt32, 1, true, alloc);
   CHECK(insert_buffer(ModelBufferType::kInputPos, pos_tensor));
 
   // Attention output
   tensor::Tensor attn(base::DataType::kDataTypeFp32, config_->head_num_,
                       config_->seq_len_, true, alloc);
-=======
-  tensor::Tensor pos_tensor(base::DataType::kDataTypeInt32, 1, true, alloc_cpu);
-  CHECK(insert_buffer(ModelBufferType::kInputPos, pos_tensor));
-
-  // Attention output
-  tensor::Tensor attn(base::DataType::kDataTypeFp32, config_->head_num_, config_->seq_len_, true,
-                      alloc);
->>>>>>> upstream/course5
   CHECK(insert_buffer(ModelBufferType::kScoreStorage, attn));
   CHECK(insert_buffer(ModelBufferType::kAttnOutput, query));
 
   // final forward output
-<<<<<<< HEAD
   tensor::Tensor forward_output(base::DataType::kDataTypeFp32, config_->vocab_size_, true,
                                 alloc);
   CHECK(insert_buffer(ModelBufferType::kForwardOutput, forward_output));
@@ -558,32 +298,6 @@ std::pair<tensor::Tensor, tensor::Tensor> LLama2Model::slice_kv_cache(
                                                   nullptr, key_cache_ptr, true);
   auto val_cache = std::make_shared<base::Buffer>(config_->kv_dim_ * sizeof(float),
                                                   nullptr, val_cache_ptr, true);
-=======
-  tensor::Tensor forward_output(base::DataType::kDataTypeFp32, config_->vocab_size_, true, alloc);
-  if (device_type_ == base::DeviceType::kDeviceCUDA) {
-    tensor::Tensor forward_output_cpu(base::DataType::kDataTypeFp32, config_->vocab_size_, true,
-                                      alloc_cpu);
-    CHECK(insert_buffer(ModelBufferType::kForwardOutputCPU, forward_output_cpu));
-  }
-
-  CHECK(insert_buffer(ModelBufferType::kForwardOutput, forward_output));
-}
-
-std::pair<tensor::Tensor, tensor::Tensor> LLama2Model::slice_kv_cache(int32_t layer_idx,
-                                                                      int32_t token_pos) const {
-  int32_t layer_offset = layer_idx * config_->seq_len_ * config_->kv_dim_;
-  int32_t cache_offset = layer_offset + token_pos * config_->kv_dim_;
-
-  float* key_cache_ptr =
-      const_cast<float*>(get_buffer(ModelBufferType::kKeyCache).ptr<float>(cache_offset));
-  float* val_cache_ptr =
-      const_cast<float*>(get_buffer(ModelBufferType::kValueCache).ptr<float>(cache_offset));
-
-  auto key_cache = std::make_shared<base::Buffer>(config_->kv_dim_ * sizeof(float), nullptr,
-                                                  key_cache_ptr, true);
-  auto val_cache = std::make_shared<base::Buffer>(config_->kv_dim_ * sizeof(float), nullptr,
-                                                  val_cache_ptr, true);
->>>>>>> upstream/course5
   key_cache->set_device_type(device_type_);
   val_cache->set_device_type(device_type_);
   tensor::Tensor key(base::DataType::kDataTypeFp32, config_->kv_dim_);
@@ -671,17 +385,10 @@ base::Status LLama2Model::create_layers() {
   return error::Success();
 }
 
-<<<<<<< HEAD
 EmbeddingOutput LLama2Model::embedding(const std::vector<int>& tokens) const {
   auto input_tokens = get_buffer(ModelBufferType::kInputTokens);
   auto input_embeddings = get_buffer(ModelBufferType::kInputEmbeddings);
   input_tokens.reshape({(int32_t)tokens.size()});
-=======
-op::EmbeddingOutput LLama2Model::embedding(const std::vector<int>& tokens) const {
-  auto input_tokens = get_buffer(ModelBufferType::kInputTokens);
-  auto input_embeddings = get_buffer(ModelBufferType::kInputEmbeddings);
-  input_tokens.reshape({static_cast<int32_t>(tokens.size())});
->>>>>>> upstream/course5
   for (int32_t i = 0; i < tokens.size(); ++i) {
     input_tokens.index<int32_t>(i) = tokens.at(i);
   }
@@ -690,23 +397,16 @@ op::EmbeddingOutput LLama2Model::embedding(const std::vector<int>& tokens) const
       tensor::Tensor(base::DataType::kDataTypeInt32, static_cast<int32_t>(tokens.size()));
   LOG_IF(FATAL, !llama_layers_->embedding_layer_)
       << "The embedding layer in the llama2 model is null pointer.";
-<<<<<<< HEAD
   STATUS_CHECK(llama_layers_->embedding_layer_->forward_i2o1(
       input_tokens, input_token_num, input_embeddings));
 
   EmbeddingOutput output;
-=======
-  STATUS_CHECK(
-      llama_layers_->embedding_layer_->forward(input_tokens, input_token_num, input_embeddings));
-  op::EmbeddingOutput output;
->>>>>>> upstream/course5
   output.input_embeddings = input_embeddings;
   output.input_tokens = input_tokens;
   output.input_token_num = input_token_num;
   return output;
 }
 
-<<<<<<< HEAD
 void LLama2Model::fill_input(int32_t next, const tensor::Tensor& pos_tensor,
                              const std::vector<int32_t>& tokens, tensor::Tensor& input,
                              const EmbeddingOutput& embedding_output) const {
@@ -739,26 +439,6 @@ void LLama2Model::fill_input(int32_t next, const tensor::Tensor& pos_tensor,
     input.assign(input_emb_buffer);
   }
   input.set_device_type(device_type_);
-=======
-tensor::Tensor LLama2Model::fill_input(const tensor::Tensor& pos_tensor,
-                                       const op::EmbeddingOutput& embedding_output,
-                                       bool is_prompt) const {
-  const int32_t pos = pos_tensor.index<int32_t>(0);
-  auto [input_tokens, input_embeddings, input_token_num] = embedding_output;
-
-  int32_t index = 0;
-  if (is_prompt) {
-    index = pos;
-  }
-  std::shared_ptr<base::Buffer> input_emb_buffer =
-      std::make_shared<base::Buffer>(config_->dim_ * sizeof(float), nullptr,
-                                     input_embeddings.ptr<float>(index * config_->dim_), true);
-
-  tensor::Tensor input(base::DataType::kDataTypeFp32, config_->dim_);
-  input.assign(input_emb_buffer);
-  input.set_device_type(device_type_);
-  return input;
->>>>>>> upstream/course5
 }
 
 void LLama2Model::attention_rms(int32_t layer_idx, const tensor::Tensor& input) const {
@@ -769,18 +449,11 @@ void LLama2Model::attention_rms(int32_t layer_idx, const tensor::Tensor& input) 
   if (!rmsnorm_layer) {
     LOG(FATAL) << "The attention rmsnorm layer is a null pointer in the llama2 model";
   }
-<<<<<<< HEAD
   STATUS_CHECK(rmsnorm_layer->forward_i1o1(input, rmsnorm_output));
 }
 
 void LLama2Model::attention_qkv(int32_t layer_idx,
                                 const tensor::Tensor& pos_tensor) const {
-=======
-  STATUS_CHECK(rmsnorm_layer->forward(input, rmsnorm_output));
-}
-
-void LLama2Model::attention_qkv(int32_t layer_idx, const tensor::Tensor& pos_tensor) const {
->>>>>>> upstream/course5
   CHECK(llama_layers_ != nullptr);
   // kv cache
   tensor::Tensor query = this->get_buffer(ModelBufferType::kQuery);
@@ -789,23 +462,15 @@ void LLama2Model::attention_qkv(int32_t layer_idx, const tensor::Tensor& pos_ten
   const auto& [key, val] = slice_kv_cache(layer_idx, pos);
   // query
   const auto& query_layer = llama_layers_->wq_layers_.at(layer_idx);
-<<<<<<< HEAD
   CHECK_NE(query_layer, nullptr)
       << "The query layer in the attention block is null pointer.";
 
   auto rmsnorm_output = get_buffer(ModelBufferType::kOutputRMSNorm);
   STATUS_CHECK(query_layer->forward_i1o1(rmsnorm_output, query));
-=======
-  CHECK_NE(query_layer, nullptr) << "The query layer in the attention block is null pointer.";
-
-  auto rmsnorm_output = get_buffer(ModelBufferType::kOutputRMSNorm);
-  STATUS_CHECK(query_layer->forward(rmsnorm_output, query));
->>>>>>> upstream/course5
 
   // key
   const auto& key_layer = llama_layers_->wk_layers_.at(layer_idx);
   CHECK_NE(key_layer, nullptr) << "The key layer in the attention block is null pointer.";
-<<<<<<< HEAD
   STATUS_CHECK(key_layer->forward_i1o1(rmsnorm_output, key));
 
   // value
@@ -813,18 +478,10 @@ void LLama2Model::attention_qkv(int32_t layer_idx, const tensor::Tensor& pos_ten
   CHECK_NE(value_layer, nullptr)
       << "The value layer in the attention block is null pointer.";
   STATUS_CHECK(value_layer->forward_i1o1(rmsnorm_output, val));
-=======
-  STATUS_CHECK(key_layer->forward(rmsnorm_output, key));
-  // value
-  const auto& value_layer = llama_layers_->wv_layers_.at(layer_idx);
-  CHECK_NE(value_layer, nullptr) << "The value layer in the attention block is null pointer.";
-  STATUS_CHECK(value_layer->forward(rmsnorm_output, val));
->>>>>>> upstream/course5
 
   // rope
   CHECK_NE(llama_layers_->rope_layer_, nullptr)
       << "The RoPE layer in the attention block is null pointer.";
-<<<<<<< HEAD
   STATUS_CHECK(
       llama_layers_->rope_layer_->forward_i3o1(query, key, pos_tensor, tensor::Tensor{}));
 }
@@ -846,38 +503,12 @@ void LLama2Model::attention_mha(int32_t layer_idx,
   mha_layer->set_pos(pos_tensor.index<int32_t>(0));
   STATUS_CHECK(mha_layer->forward_i5o1(query, score_storage, key_cache, val_cache,
                                        key_storage, mha_output));
-=======
-  STATUS_CHECK(llama_layers_->rope_layer_->forward(query, key, pos_tensor, tensor::Tensor{}));
-}
-
-void LLama2Model::attention_mha(int32_t layer_idx, const tensor::Tensor& pos_tensor) const {
-  CHECK(llama_layers_ != nullptr);
-  // mha
-  tensor::Tensor key_cache = get_buffer(ModelBufferType::kKeyCache);
-  // VAL = [val1,val2,...val t]
-  // output @ VAL = 最终的结果
-  tensor::Tensor val_cache = get_buffer(ModelBufferType::kValueCache);
-
-  tensor::Tensor mha_output = get_buffer(ModelBufferType::kOutputMHA);
-  tensor::Tensor score_storage = get_buffer(ModelBufferType::kScoreStorage);
-  tensor::Tensor query = this->get_buffer(ModelBufferType::kQuery);
-
-  const auto& mha_layer = llama_layers_->mha_layers_.at(layer_idx);
-  CHECK_NE(mha_layer, nullptr) << "The multi head attention layer is null pointer.";
-  int pos = pos_tensor.index<int32_t>(0);
-  std::dynamic_pointer_cast<op::MultiHeadAttention>(mha_layer)->set_pos(pos);
-  STATUS_CHECK(mha_layer->forward(query, score_storage, key_cache, val_cache, mha_output));
->>>>>>> upstream/course5
 
   // wo @ attention output
   tensor::Tensor attn_output = get_buffer(ModelBufferType::kAttnOutput);
   const auto& wo_layer = llama_layers_->wo_layers_.at(layer_idx);
   CHECK_NE(wo_layer, nullptr) << "The weight output layer is null pointer.";
-<<<<<<< HEAD
   STATUS_CHECK(wo_layer->forward_i1o1(mha_output, attn_output));
-=======
-  STATUS_CHECK(wo_layer->forward(mha_output, attn_output));
->>>>>>> upstream/course5
 }
 
 void LLama2Model::feed_forward(int32_t layer_idx, const tensor::Tensor& input) const {
@@ -885,7 +516,6 @@ void LLama2Model::feed_forward(int32_t layer_idx, const tensor::Tensor& input) c
   // residual add
   CHECK_NE(llama_layers_->add_layer_, nullptr)
       << "The add layer in the feedforward block is null pointer";
-<<<<<<< HEAD
   STATUS_CHECK(llama_layers_->add_layer_->forward_i2o1(
       input, get_buffer(ModelBufferType::kAttnOutput), input));
 
@@ -896,73 +526,41 @@ void LLama2Model::feed_forward(int32_t layer_idx, const tensor::Tensor& input) c
   CHECK_NE(ffn_rmsnorm, nullptr)
       << "The final rmsnorm layer in the feedforward block is null pointer";
   STATUS_CHECK(ffn_rmsnorm->forward_i1o1(input, ffn_norm_output));
-=======
-  STATUS_CHECK(
-      llama_layers_->add_layer_->forward(input, get_buffer(ModelBufferType::kAttnOutput), input));
-
-  // ffn rmsnorm
-  tensor::Tensor ffn_norm_output = get_buffer(ModelBufferType::kFFNRMSNorm);
-  const auto& ffn_rmsnorm = llama_layers_->rmsnorm_layers_.at(layer_idx + config_->layer_num_);
-  CHECK_NE(ffn_rmsnorm, nullptr)
-      << "The final rmsnorm layer in the feedforward block is null pointer";
-  STATUS_CHECK(ffn_rmsnorm->forward(input, ffn_norm_output));
->>>>>>> upstream/course5
 
   // w1
   tensor::Tensor w1_output = get_buffer(ModelBufferType::kW1Output);
   const auto& w1_layer = llama_layers_->w1_layers_.at(layer_idx);
   CHECK_NE(w1_layer, nullptr) << "The w1 layer in the feedforward block is null pointer";
-<<<<<<< HEAD
   STATUS_CHECK(w1_layer->forward_i1o1(ffn_norm_output, w1_output));
-=======
-  STATUS_CHECK(w1_layer->forward(ffn_norm_output, w1_output));
->>>>>>> upstream/course5
 
   // w3
   tensor::Tensor w3_ouput = get_buffer(ModelBufferType::kW3Output);
   const auto& w3_layer = llama_layers_->w3_layers_.at(layer_idx);
   CHECK_NE(w3_layer, nullptr) << "The w3 layer in the feedforward block is null pointer";
-<<<<<<< HEAD
   STATUS_CHECK(w3_layer->forward_i1o1(ffn_norm_output, w3_ouput));
-=======
-  STATUS_CHECK(w3_layer->forward(ffn_norm_output, w3_ouput));
->>>>>>> upstream/course5
 
   // SwiGLU
   CHECK_NE(llama_layers_->swiglu_layer_, nullptr)
       << "The swiglu layer in the feedforward block is null pointer";
-<<<<<<< HEAD
   STATUS_CHECK(
       llama_layers_->swiglu_layer_->forward_i2o1(w1_output, w3_ouput, w1_output));
-=======
-  STATUS_CHECK(llama_layers_->swiglu_layer_->forward(w1_output, w3_ouput, w1_output));
->>>>>>> upstream/course5
 
   // w2
   tensor::Tensor w2_output = get_buffer(ModelBufferType::kW2Output);
   const auto& w2_layer = llama_layers_->w2_layers_.at(layer_idx);
   CHECK_NE(w2_layer, nullptr) << "The w2 layer in the feedforward block is null pointer";
-<<<<<<< HEAD
   STATUS_CHECK(w2_layer->forward_i1o1(w1_output, w2_output));
-=======
-  STATUS_CHECK(w2_layer->forward(w1_output, w2_output));
->>>>>>> upstream/course5
 
   // residual add
   CHECK_NE(llama_layers_->add_layer_, nullptr)
       << "The add layer in the feedforward block is null pointer";
-<<<<<<< HEAD
   STATUS_CHECK(llama_layers_->add_layer_->forward_i2o1(input, w2_output, input));
-=======
-  STATUS_CHECK(llama_layers_->add_layer_->forward(input, w2_output, input));
->>>>>>> upstream/course5
 }
 
 void LLama2Model::cls_logits(const tensor::Tensor& input) const {
   CHECK(llama_layers_ != nullptr);
   const auto& norm = llama_layers_->rmsnorm_layers_.at(2 * config_->layer_num_);
   CHECK_NE(norm, nullptr);
-<<<<<<< HEAD
   STATUS_CHECK(norm->forward_i1o1(input, input));
 
   tensor::Tensor forward_output = get_buffer(ModelBufferType::kForwardOutput);
@@ -981,32 +579,6 @@ std::string LLama2Model::post_processing(int32_t pos, int32_t& next,
   }
   const std::string& output_str = this->encode_layer_->decode(next);
   return output_str;
-=======
-  STATUS_CHECK(norm->forward(input, input));
-
-  tensor::Tensor forward_output = get_buffer(ModelBufferType::kForwardOutput);
-  CHECK_NE(llama_layers_->cls_layer_, nullptr);
-  STATUS_CHECK(llama_layers_->cls_layer_->forward(input, forward_output));
-}
-
-int32_t LLama2Model::post_processing(const tensor::Tensor& pos, bool is_prompt) const {
-  tensor::Tensor forward_output = get_buffer(ModelBufferType::kForwardOutput);
-  const float* forward_logits = forward_output.ptr<float>();
-  if (device_type_ == base::DeviceType::kDeviceCUDA) {
-    const float* forward_logits_cpu = get_buffer(ModelBufferType::kForwardOutputCPU).ptr<float>();
-    cudaMemcpy(const_cast<float*>(forward_logits_cpu), forward_logits, forward_output.byte_size(),
-               cudaMemcpyDeviceToHost);
-    forward_logits = forward_logits_cpu;
-  }
-
-  int32_t next = 0;
-  if (is_prompt) {
-    next = -1;
-  } else {
-    next = sampler_->sample(forward_logits, static_cast<int32_t>(forward_output.size()));
-  }
-  return next;
->>>>>>> upstream/course5
 }
 
 }  // namespace model

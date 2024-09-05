@@ -3,16 +3,10 @@
 #include <glog/logging.h>
 #include <cstdint>
 #include <string>
-#define UNUSED(expr) \
-  do {               \
-    (void)(expr);    \
-  } while (0)
-
 namespace base {
 enum class DeviceType : uint8_t {
   kDeviceUnknown = 0,
   kDeviceCPU = 1,
-  kDeviceCUDA = 2,
 };
 
 enum class DataType : uint8_t {
@@ -78,8 +72,6 @@ class Status {
 
   operator bool() const;
 
-  int32_t get_err_code() const;
-
   const std::string& get_err_msg() const;
 
   void set_err_msg(const std::string& err_msg);
@@ -90,17 +82,17 @@ class Status {
 };
 
 namespace error {
-#define STATUS_CHECK(call)                                                       \
-  do {                                                                           \
-    const base::Status& status = call;                                           \
-    if (!status) {                                                               \
-      const size_t buf_size = 512;                                               \
-      char buf[buf_size];                                                        \
-      snprintf(buf, buf_size - 1,                                                \
-               "Infer error\n File:%s Line:%d\n Error code:%d\n Error msg:%s\n", \
-               __FILE__, __LINE__, int(status), status.get_err_msg().c_str());   \
-      LOG(FATAL) << buf;                                                         \
-    }                                                                            \
+#define STATUS_CHECK(call)                                                                  \
+  do {                                                                                     \
+    const base::Status& status = call;                                                     \
+    if (!status) {                                                                         \
+      const size_t buf_size = 512;                                                         \
+      char buf[buf_size];                                                                  \
+      snprintf(buf, buf_size - 1,                                                          \
+               "Infer error\n File:%s Line:%d\n Error code:%d\n Error msg:%s\n", __FILE__, \
+               __LINE__, int(status), status.get_err_msg().c_str());                       \
+      LOG(FATAL) << buf;                                                                   \
+    }                                                                                      \
   } while (0)
 
 Status Success(const std::string& err_msg = "");

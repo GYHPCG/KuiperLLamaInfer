@@ -1,9 +1,5 @@
 #ifndef KUIPER_INCLUDE_TENSOR_TENSOR_H_
 #define KUIPER_INCLUDE_TENSOR_TENSOR_H_
-<<<<<<< HEAD
-=======
-#include <driver_types.h>
->>>>>>> upstream/course5
 #include <glog/logging.h>
 #include <armadillo>
 #include <memory>
@@ -17,7 +13,6 @@ class Tensor {
   explicit Tensor() = default;
 
   explicit Tensor(base::DataType data_type, int32_t dim0, bool need_alloc = false,
-<<<<<<< HEAD
                   std::shared_ptr<base::DeviceAllocator> alloc = nullptr);
 
   explicit Tensor(base::DataType data_type, int32_t dim0, int32_t dim1,
@@ -36,33 +31,6 @@ class Tensor {
 
   bool is_empty() const;
 
-=======
-                  std::shared_ptr<base::DeviceAllocator> alloc = nullptr, void* ptr = nullptr);
-
-  explicit Tensor(base::DataType data_type, int32_t dim0, int32_t dim1, bool need_alloc = false,
-                  std::shared_ptr<base::DeviceAllocator> alloc = nullptr, void* ptr = nullptr);
-
-  explicit Tensor(base::DataType data_type, int32_t dim0, int32_t dim1, int32_t dim2,
-                  bool need_alloc = false, std::shared_ptr<base::DeviceAllocator> alloc = nullptr,
-                  void* ptr = nullptr);
-
-  explicit Tensor(base::DataType data_type, int32_t dim0, int32_t dim1, int32_t dim2, int32_t dim3,
-                  bool need_alloc = false, std::shared_ptr<base::DeviceAllocator> alloc = nullptr,
-                  void* ptr = nullptr);
-
-  explicit Tensor(base::DataType data_type, std::vector<int32_t> dims, bool need_alloc = false,
-                  std::shared_ptr<base::DeviceAllocator> alloc = nullptr, void* ptr = nullptr);
-
-  void to_cpu();
-
-  void to_cuda(cudaStream_t stream, int u = 31);
-
-  bool is_empty() const;
-
-  void init_buffer(std::shared_ptr<base::DeviceAllocator> alloc, base::DataType data_type,
-                   bool need_alloc, void* ptr);
-
->>>>>>> upstream/course5
   template <typename T>
   T* ptr();
 
@@ -71,11 +39,6 @@ class Tensor {
 
   void reshape(const std::vector<int32_t>& dims);
 
-<<<<<<< HEAD
-=======
-  std::shared_ptr<base::Buffer> get_buffer() const;
-
->>>>>>> upstream/course5
   size_t size() const;
 
   size_t byte_size() const;
@@ -94,11 +57,12 @@ class Tensor {
 
   void reset(base::DataType data_type, const std::vector<int32_t>& dims);
 
-  void set_device_type(base::DeviceType device_type) const;
+  void set_device_type(base::DeviceType device_type);
 
   base::DeviceType device_type() const;
 
-  bool allocate(std::shared_ptr<base::DeviceAllocator> allocator, bool need_realloc = false);
+  bool allocate(std::shared_ptr<base::DeviceAllocator> allocator,
+                bool need_realloc = false);
 
   template <typename T>
   T* ptr(int64_t index);
@@ -112,7 +76,8 @@ class Tensor {
   template <typename T>
   const T& index(int64_t offset) const;
 
-  tensor::Tensor clone() const;
+  template <typename T>
+  void transpose_dim12(Tensor dst);
 
  private:
   size_t size_ = 0;
@@ -123,16 +88,12 @@ class Tensor {
 
 template <typename T>
 T& Tensor::index(int64_t offset) {
-  CHECK_GE(offset, 0);
-  CHECK_LT(offset, this->size());
   T& val = *(reinterpret_cast<T*>(buffer_->ptr()) + offset);
   return val;
 }
 
 template <typename T>
 const T& Tensor::index(int64_t offset) const {
-  CHECK_GE(offset, 0);
-  CHECK_LT(offset, this->size());
   const T& val = *(reinterpret_cast<T*>(buffer_->ptr()) + offset);
   return val;
 }
@@ -165,6 +126,36 @@ const T* Tensor::ptr(int64_t index) const {
   CHECK(buffer_ != nullptr && buffer_->ptr() != nullptr)
       << "The data area buffer of this tensor is empty or it points to a null pointer.";
   return reinterpret_cast<const T*>(buffer_->ptr()) + index;
+}
+
+template <typename T>
+void Tensor::transpose_dim12(Tensor dst) {
+  CHECK_EQ(dims_size(), 3);
+  CHECK_EQ(is_empty(), false);
+  CHECK_EQ(dst.dims_size(), 3);
+  CHECK_EQ(dst.is_empty(), false);
+  CHECK_EQ(get_dim(0), dst.get_dim(0));
+  CHECK_EQ(get_dim(1), dst.get_dim(2));
+  CHECK_EQ(get_dim(2), dst.get_dim(1));
+  CHECK(device_type() == dst.device_type());
+  CHECK(device_type() == base::DeviceType::kDeviceCPU);
+
+  int32_t src_ch = this->get_dim(0);
+  int32_t src_row = this->get_dim(1);
+  int32_t src_col = this->get_dim(2);
+  int32_t dst_row = dst.get_dim(1);
+  int32_t dst_col = dst.get_dim(2);
+  int32_t plane_size = src_col * src_row;
+
+  T* src_ptr = this->ptr<T>();
+  T* dst_ptr = dst.ptr<T>();
+  for (int32_t ch = 0; ch < src_ch; ++ch) {
+    T* src_ch_ptr = src_ptr + ch * plane_size;
+    T* dst_ch_ptr = dst_ptr + ch * plane_size;
+    arma::Mat<T> src_mat = arma::Mat<T>(src_ch_ptr, src_col, src_row, false, true);
+    arma::Mat<T> dst_mat = arma::Mat<T>(dst_ch_ptr, dst_col, dst_row, false, true);
+    dst_mat = src_mat.t();
+  }
 }
 }  // namespace tensor
 #endif  // KUIPER_INCLUDE_TENSOR_TENSOR_H_

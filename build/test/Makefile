@@ -202,30 +202,6 @@ test_math.cpp.s:
 	cd /root/KuiperLLama/build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_llm.dir/build.make test/CMakeFiles/test_llm.dir/test_math.cpp.s
 .PHONY : test_math.cpp.s
 
-test_op.o: test_op.cpp.o
-.PHONY : test_op.o
-
-# target to build an object file
-test_op.cpp.o:
-	cd /root/KuiperLLama/build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_llm.dir/build.make test/CMakeFiles/test_llm.dir/test_op.cpp.o
-.PHONY : test_op.cpp.o
-
-test_op.i: test_op.cpp.i
-.PHONY : test_op.i
-
-# target to preprocess a source file
-test_op.cpp.i:
-	cd /root/KuiperLLama/build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_llm.dir/build.make test/CMakeFiles/test_llm.dir/test_op.cpp.i
-.PHONY : test_op.cpp.i
-
-test_op.s: test_op.cpp.s
-.PHONY : test_op.s
-
-# target to generate assembly for a file
-test_op.cpp.s:
-	cd /root/KuiperLLama/build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_llm.dir/build.make test/CMakeFiles/test_llm.dir/test_op.cpp.s
-.PHONY : test_op.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -244,9 +220,6 @@ help:
 	@echo "... test_math.o"
 	@echo "... test_math.i"
 	@echo "... test_math.s"
-	@echo "... test_op.o"
-	@echo "... test_op.i"
-	@echo "... test_op.s"
 .PHONY : help
 
 

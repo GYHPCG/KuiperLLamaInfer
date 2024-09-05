@@ -4,7 +4,6 @@
 
 #ifndef KUIPER_INCLUDE_OP_MATMUL_H_
 #define KUIPER_INCLUDE_OP_MATMUL_H_
-#include <base/cuda_config.h>
 #include "layer.h"
 namespace op {
 class MatmulLayer : public LayerFp32Param {
@@ -13,7 +12,7 @@ class MatmulLayer : public LayerFp32Param {
 
   base::Status check() const override;
 
-  base::Status forward() override;
+  base::Status base_forward() override;
 
  private:
   int32_t dim0_ = 0;

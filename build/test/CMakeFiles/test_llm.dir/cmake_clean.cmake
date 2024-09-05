@@ -5,8 +5,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/test_llm.dir/test_main.cpp.o.d"
   "CMakeFiles/test_llm.dir/test_math.cpp.o"
   "CMakeFiles/test_llm.dir/test_math.cpp.o.d"
-  "CMakeFiles/test_llm.dir/test_op.cpp.o"
-  "CMakeFiles/test_llm.dir/test_op.cpp.o.d"
   "test_llm"
   "test_llm.pdb"
 )

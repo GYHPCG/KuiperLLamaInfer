@@ -36,7 +36,6 @@ void CPUDeviceAllocator::release(void* ptr) const {
   }
 }
 
-<<<<<<< HEAD
 void CPUDeviceAllocator::memcpy(const void* src_ptr, void* dest_ptr, size_t size) const {
   CHECK_NE(src_ptr, nullptr);
   CHECK_NE(dest_ptr, nullptr);
@@ -46,7 +45,5 @@ void CPUDeviceAllocator::memcpy(const void* src_ptr, void* dest_ptr, size_t size
   std::memcpy(dest_ptr, src_ptr, size);
 }
 
-=======
->>>>>>> upstream/course5
 std::shared_ptr<CPUDeviceAllocator> CPUDeviceAllocatorFactory::instance = nullptr;
 }  // namespace base

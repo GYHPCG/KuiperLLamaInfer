@@ -143,10 +143,5 @@
   "directory": "/root/KuiperLLama/build/test",
   "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -I/root/KuiperLLama/test/../kuiper/include -I/root/KuiperLLama/kuiper/include -g -std=gnu++20 -o CMakeFiles/test_llm.dir/test_math.cpp.o -c /root/KuiperLLama/test/test_math.cpp",
   "file": "/root/KuiperLLama/test/test_math.cpp"
-},
-{
-  "directory": "/root/KuiperLLama/build/test",
-  "command": "/usr/bin/g++ -DGLOG_USE_GLOG_EXPORT -I/root/KuiperLLama/test/../kuiper/include -I/root/KuiperLLama/kuiper/include -g -std=gnu++20 -o CMakeFiles/test_llm.dir/test_op.cpp.o -c /root/KuiperLLama/test/test_op.cpp",
-  "file": "/root/KuiperLLama/test/test_op.cpp"
 }
 ]
